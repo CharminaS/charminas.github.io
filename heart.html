@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ASCII Heart with Wings</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #060610;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 50%, rgba(180,80,220,0.09) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 25% 65%, rgba(80,180,255,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 75% 40%, rgba(255,100,180,0.07) 0%, transparent 60%);
+    animation: ambientPulse 5s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes ambientPulse { 0%{opacity:.7} 100%{opacity:1.2} }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.013) 2px, rgba(255,255,255,0.013) 4px);
+    pointer-events: none;
+    z-index: 100;
+  }
+  .wrap { position: relative; display: inline-block; }
+  pre {
+    font-size: clamp(9px, 1.6vw, 14px);
+    line-height: 1.32;
+    letter-spacing: 0.05em;
+    white-space: pre;
+    animation: floatBob 3s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes floatBob {
+    0%,100%{transform:translateY(0) scale(1);}
+    50%{transform:translateY(-9px) scale(1.022);}
+  }
+  .c,.h,.wl,.wr { display:inline-block; animation: rainbow 3s linear infinite; }
+  @keyframes rainbow {
+    0%  {color:#ff79c6;text-shadow:0 0 7px #ff79c6bb;}
+    16% {color:#bd93f9;text-shadow:0 0 7px #bd93f9bb;}
+    33% {color:#8be9fd;text-shadow:0 0 7px #8be9fdbb;}
+    50% {color:#50fa7b;text-shadow:0 0 7px #50fa7bbb;}
+    66% {color:#f1fa8c;text-shadow:0 0 7px #f1fa8cbb;}
+    83% {color:#ffb86c;text-shadow:0 0 7px #ffb86cbb;}
+    100%{color:#ff79c6;text-shadow:0 0 7px #ff79c6bb;}
+  }
+  .wl { animation: rainbow 3s linear infinite, flapL 3s ease-in-out infinite; transform-origin:100% 50%; }
+  .wr { animation: rainbow 3s linear infinite, flapR 3s ease-in-out infinite; transform-origin:0% 50%; }
+  @keyframes flapL {
+    0%,100%{transform:scaleX(1) skewY(0);}
+    25%{transform:scaleX(.80) skewY(-4deg) translateY(-1px);}
+    50%{transform:scaleX(1.07) skewY(1.5deg);}
+    75%{transform:scaleX(.86) skewY(-2.5deg) translateY(-1px);}
+  }
+  @keyframes flapR {
+    0%,100%{transform:scaleX(1) skewY(0);}
+    25%{transform:scaleX(.80) skewY(4deg) translateY(-1px);}
+    50%{transform:scaleX(1.07) skewY(-1.5deg);}
+    75%{transform:scaleX(.86) skewY(2.5deg) translateY(-1px);}
+  }
+  .h { animation: rainbow 3s linear infinite, heartbeat 3s ease-in-out infinite; transform-origin:50% 60%; }
+  @keyframes heartbeat {
+    0%,45%,100%{transform:scale(1);}
+    20%{transform:scale(1.13);}
+    30%{transform:scale(1.06);}
+  }
+  .shimmer {
+    position:absolute;
+    inset:0;
+    background:linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%);
+    animation: sweep 4.5s ease-in-out infinite;
+    pointer-events:none;
+    z-index:2;
+  }
+  @keyframes sweep {
+    0%{transform:translateX(-130%);}
+    65%{transform:translateX(230%);}
+    100%{transform:translateX(230%);}
+  }
+  .label {
+    margin-top:14px;
+    font-size:10px;
+    letter-spacing:.38em;
+    text-transform:uppercase;
+    animation:rainbow 3s linear infinite;
+    animation-delay:-1.5s;
+    opacity:.55;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <pre id="art"></pre>
+  <div class="shimmer"></div>
+</div>
+<div class="label">✦ ascii heart ✦</div>
+
+<script>
+// rows: array of [type, text] segments per line
+// types: 'wl'=left wing, 'wr'=right wing, 'h'=heart body, 'c'=general colored
+const rows = [
+  [["c","            "],["c","  ✦   *   ✦  "],["c","            "]],
+  [["wl","  `'-..__   "],["h"," _     _ "],["wr","   __..-'`  "]],
+  [["wl"," /  /\\   `-."],["h","( `(+)` )"],["wr","-'   /\\  \\ "]],
+  [["wl","/  /()\\    ."],["h"," \\~~~~~/ "],["wr",".    /()\\  \\"]],
+  [["wl","| /  /\\  \\ |"],["h","  \\~~~/ "],["wr","| /  /\\  \\ |"]],
+  [["wl","|  *~ ~*   |"],["h","  |~~~| "],["wr","|   *~ ~*  |"]],
+  [["wl"," \\ .`--'. / "],["h","  | ♥ | "],["wr"," \\ .`--'. / "]],
+  [["wl","  \\______/  "],["h","  \\~♥~/ "],["wr","  \\______/  "]],
+  [["c","  *  ✦  *  "],["h","   \\~/ "],["c","  *  ✦  *  "]],
+  [["c","    ✦       "],["h","    V   "],["c","       ✦    "]],
+  [["c","            "],["c","* ✦ * ✦ * ✦ *"],["c","            "]],
+];
+
+const pre = document.getElementById('art');
+let html = '';
+
+rows.forEach((row, ri) => {
+  let line = '';
+  row.forEach(([type, text]) => {
+    for (let ci = 0; ci < text.length; ci++) {
+      const ch = text[ci];
+      const delay = -((ri * 0.20 + ci * 0.065) % 3).toFixed(2);
+      const e = ch==='<'?'&lt;':ch==='>'?'&gt;':ch==='&'?'&amp;':ch;
+      line += `<span class="${type}" style="animation-delay:${delay}s">${e}</span>`;
+    }
+  });
+  html += line + '\n';
+});
+
+pre.innerHTML = html;
+</script>
+</body>
+</html>
